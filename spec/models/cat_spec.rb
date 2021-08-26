@@ -17,4 +17,9 @@ RSpec.describe Cat, type: :model do
     cat = Cat.create(age: 2, name: 'Boo')
     expect(cat.errors[:enjoys]).to_not be_empty
   end
+
+  it 'not valid if enjoy less than 10' do
+    cat = Cat.create(age: 2, name: 'Boo', enjoys: 'nothing')
+    expect(cat.errors[:enjoys]).to_not be_empty
+  end
 end
