@@ -24,7 +24,7 @@ RSpec.describe "Cats", type: :request do
           enjoys: 'the beach'
         }
       }
-      
+
       # send the request to the server
       post '/cats', params: cat_params
 
@@ -67,6 +67,7 @@ RSpec.describe "Cats", type: :request do
       expect(updated_cat.age).to eq 15
       expect(updated_cat.enjoys).to eq 'tuna'
     end
+  end
 
     describe "DELETE /delete" do
       it "deletes a cat" do
@@ -83,11 +84,52 @@ RSpec.describe "Cats", type: :request do
 
         # delete the cat
         delete "/cats/#{cat.id}"
-        
+
         expect(response).to have_http_status(200)
         expect(Cat.all.length).to eq 0
       end
     end
-  end
+
+    describe "cannot create a cat without valid attributes" do
+      it 'cannot create a cat without a name' do
+        cat_params = {
+          cat: {
+            age: 2,
+            enjoys: 'cuddles and belly rubs'
+          }
+        }
+        post '/cats', params: cat_params
+        cat = JSON.parse(response.body)
+        expect(response).to have_http_status(422)
+        expect(cat['name']).to include "can't be blank"
+      end
+
+      it 'cannot create a cat without an age' do
+        cat_params = {
+          cat: {
+            name: 'Boo',
+            enjoys: 'cuddles and belly rubs'
+          }
+        }
+        post '/cats', params: cat_params
+        cat = JSON.parse(response.body)
+        expect(response).to have_http_status(422)
+        expect(cat['age']).to include "can't be blank"
+      end
+
+      it 'cannot create a cat without an enjoys' do
+        cat_params = {
+          cat: {
+            age: 2,
+            name: 'Boo'
+          }
+        }
+        post '/cats', params: cat_params
+        cat = JSON.parse(response.body)
+        expect(response).to have_http_status(422)
+        expect(cat['enjoys']).to include "can't be blank"
+      end
+
+    end
 
 end
