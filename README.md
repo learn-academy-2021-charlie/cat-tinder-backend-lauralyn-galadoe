@@ -22,3 +22,12 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+Setup
+```
+$ bundle install
+$ rails db:create
+$ rails db:migrate
+$ rails db:seed
+$ rails s
+```
